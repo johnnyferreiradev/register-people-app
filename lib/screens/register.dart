@@ -6,34 +6,29 @@ import 'package:register_people/model/people.dart';
 
 class RegisterPeople extends StatefulWidget {
   final DatabaseApp db;
+  final String title;
 
   RegisterPeople({Key? key, required this.title,  required this.db}) : super(key: key);
 
-  final String title;
-
   @override
-  _RegisterPeopleState createState() => _RegisterPeopleState(db: db);
+  _RegisterPeopleState createState() => _RegisterPeopleState();
 }
 
 class _RegisterPeopleState extends State<RegisterPeople> {
-  final DatabaseApp db;
-
-  _RegisterPeopleState( {required this.db });
-
   TextEditingController _nameController = new TextEditingController();
   TextEditingController _phoneController = new TextEditingController();
   TextEditingController _addressController = new TextEditingController();
 
   void registerPeople(context) {
     if (_nameController.text.isNotEmpty && _phoneController.text.isNotEmpty && _addressController.text.isNotEmpty) {
-      db.peopleRepositoryDAO.insertItem(new People(
+      widget.db.peopleRepositoryDAO.insertItem(new People(
         createdAt: DateTime.now().toUtc().toString(),
         name: _nameController.text,
         phone: _phoneController.text,
         address: _addressController.text,
       ));
 
-       Navigator.of(context).pushNamed('/');
+      Navigator.of(context).pushNamed('/');
     }
   }
 
@@ -54,11 +49,9 @@ class _RegisterPeopleState extends State<RegisterPeople> {
 
   @override
   Widget build(BuildContext context) {
-    print('Opa = $context');
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(this.widget.title),
       ),
       body: Container(
         child: Column(

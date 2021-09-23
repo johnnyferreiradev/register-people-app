@@ -147,7 +147,7 @@ class _$PeopleRepositoryDAO extends PeopleRepositoryDAO {
 
   @override
   Future<People?> getById(int id) async {
-    return _queryAdapter.query('SELECT * People WHERE id = ?1',
+    return _queryAdapter.query('SELECT * FROM People WHERE id = ?1',
         mapper: (Map<String, Object?> row) => People(
             id: row['id'] as int?,
             createdAt: row['createdAt'] as String,

@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:register_people/database/database.dart';
+import 'package:register_people/model/people.dart';
 
 class PeopleList extends StatefulWidget {
   final DatabaseApp db;
@@ -25,21 +26,27 @@ class _PeopleListState extends State<PeopleList> {
       ),
       body: ListView(
         children: [
-          ListTile(
-            leading: Icon(Icons.people),
-            title: Text('Fulano de tal - 99999999'),
-            subtitle: Text('Rua de fulano de tal'),
-          ),
-          ListTile(
-            leading: Icon(Icons.people),
-            title: Text('Beltrano de tal - 11111111'),
-            subtitle: Text('Rua de beltrano de tal'),
-          ),
-          ListTile(
-            leading: Icon(Icons.people),
-            title: Text('Sicrano de tal - 22222222'),
-            subtitle: Text('Rua de sicrano de tal'),
-          ),
+          FutureBuilder<List<People>>(
+            future: widget.db.peopleRepositoryDAO.getAll(),
+            builder: (context, snapshot){
+              return snapshot.hasData
+                ? ListView.builder(
+                   scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      leading: Icon(Icons.people),
+                      title: Text('${snapshot.data![index].name} - ${snapshot.data![index].phone}'),
+                      subtitle: Text(snapshot.data![index].address),
+                    );
+                  }
+                )
+                : Center(
+                  child: Text('Nenhuma pessoa cadastrada'),
+                );
+            },
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(
