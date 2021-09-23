@@ -1,26 +1,40 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:register_people/database/database.dart';
+import 'package:register_people/model/people.dart';
 
 class RegisterPeople extends StatefulWidget {
-  RegisterPeople({Key? key, required this.title}) : super(key: key);
+  final DatabaseApp db;
+
+  RegisterPeople({Key? key, required this.title,  required this.db}) : super(key: key);
 
   final String title;
 
   @override
-  _RegisterPeopleState createState() => _RegisterPeopleState();
+  _RegisterPeopleState createState() => _RegisterPeopleState(db: db);
 }
 
 class _RegisterPeopleState extends State<RegisterPeople> {
+  final DatabaseApp db;
+
+  _RegisterPeopleState( {required this.db });
 
   TextEditingController _nameController = new TextEditingController();
   TextEditingController _phoneController = new TextEditingController();
   TextEditingController _addressController = new TextEditingController();
 
-  void registerPeople() {
-    setState(() {
-      
-    });
+  void registerPeople(context) {
+    if (_nameController.text.isNotEmpty && _phoneController.text.isNotEmpty && _addressController.text.isNotEmpty) {
+      db.peopleRepositoryDAO.insertItem(new People(
+        createdAt: DateTime.now().toUtc().toString(),
+        name: _nameController.text,
+        phone: _phoneController.text,
+        address: _addressController.text,
+      ));
+
+       Navigator.of(context).pushNamed('/');
+    }
   }
 
   TextField createTextField(String text, TextEditingController controller) {
@@ -65,7 +79,7 @@ class _RegisterPeopleState extends State<RegisterPeople> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: registerPeople,
+        onPressed: () => registerPeople(context),
         tooltip: 'Salvar',
         child: Icon(Icons.save),
       ),

@@ -1,9 +1,12 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:register_people/database/database.dart';
 
 class PeopleList extends StatefulWidget {
-  PeopleList({Key? key, required this.title}) : super(key: key);
+  final DatabaseApp db;
+
+  PeopleList({Key? key, required this.title,  required this.db}) : super(key: key);
 
   final String title;
 
